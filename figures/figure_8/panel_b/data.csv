@@ -1,0 +1,10 @@
+cohort,condition,component,median,ci95_lo,ci95_hi,p_bootstrap,p_signflip,n_electrodes,n_participants,convention
+podcast,without controls,between,0.0016113960024924,-0.0091147767112894,0.0276323672234397,0.526,0.078125,135.0,8.0,training-only
+podcast,without controls,within,-0.017033971825938,-0.0262327582796274,-0.006855437967291,0.0022,0.265625,135.0,8.0,training-only
+podcast,without controls,within - between,-0.0252824515429511,-0.0376226164610489,-0.006618543111343,0.0102,0.03125,135.0,8.0,training-only
+podcast,with timing + neighbour controls,between,0.0034652160397442,-0.0064503973351799,0.0272612760057255,0.4222,0.03125,135.0,8.0,training-only
+podcast,with timing + neighbour controls,within,-0.0136254608982048,-0.0257914698386528,-0.0068322587469641,0.001,0.3203125,135.0,8.0,training-only
+podcast,with timing + neighbour controls,within - between,-0.0282130584298043,-0.0468715848311837,-0.0127723887188801,0.0,0.015625,135.0,8.0,training-only
+film,film cohort pipeline,between,0.0604652589460426,0.0488078724500999,0.0718053417577284,0.0,,144.0,8.0,Brain Treebank pipeline
+film,film cohort pipeline,within,-0.0048863906465753,-0.0064328428491099,-0.0024349118486314,0.0,,144.0,8.0,Brain Treebank pipeline
+film,film cohort pipeline,within - between,-0.0660599330428036,-0.0777012923169431,-0.0472373529494639,0.0,,144.0,8.0,Brain Treebank pipeline

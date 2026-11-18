@@ -1,0 +1,3 @@
+comparison,predicted_direction,n,n_subjects,median_diff,lo,hi,p
+"podcast, weaker acoustic control",rise,26.0,7.0,0.0006565203748052,-0.0002684652457565,0.0016006622276804,0.1098
+"film, stronger acoustic control",fall,43.0,8.0,0.0002259132013503,3.170169457611394e-05,0.0006897085057648,0.0314

@@ -1,0 +1,4 @@
+convention,n_electrodes,unbiased,median_4band,median_5band,pct_change,peak_of_mean_lag_ms_4band,peak_of_mean_lag_ms_5band,verdict
+4-band peak lag,135.0,False,0.0114842434562625,0.0078061115034488,-32.02763827518732,250.0,225.00000000000009,SUPPORTED: both unbiased conventions change by less than 20%
+own peak,135.0,True,0.0114842434562625,0.0098792759967891,-13.97538693415758,250.0,225.00000000000009,SUPPORTED: both unbiased conventions change by less than 20%
+"mean, 0-500 ms",135.0,True,0.0040162190145137,0.0033853000906717,-15.7092758527847,250.0,225.00000000000009,SUPPORTED: both unbiased conventions change by less than 20%

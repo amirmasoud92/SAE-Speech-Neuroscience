@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+data/
+results/
+cache/
+figures/**/panel.pdf
+figures/**/panel.png

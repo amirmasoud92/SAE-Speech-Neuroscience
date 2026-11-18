@@ -1,0 +1,211 @@
+# =============================================================================
+# Analysis parameters. Every parameter of the analysis is set here; the code reads
+# it through utils/config.py. Relative paths are resolved against the repository
+# root; the environment variable PODCAST_BIDS_ROOT overrides the dataset location.
+# =============================================================================
+
+project:
+  name: monosemantic-temporal-dynamics
+  seed: 20260901              # global RNG seed; every stochastic step derives from it
+  bids_root: "data/ds005574"  # the Podcast ECoG dataset (OpenNeuro ds005574)
+  results_root: "results"
+  cache_root: "cache"         # relative to results_root
+
+# -----------------------------------------------------------------------------
+# Participants and electrodes
+# -----------------------------------------------------------------------------
+subjects: [sub-01, sub-02, sub-03, sub-04, sub-05, sub-06, sub-07, sub-08, sub-09]
+
+electrodes:
+  # Inclusion: BIDS status == good, type == ECOG, present in the high-gamma derivative,
+  # has MNI coordinates.
+  require_status_good: true
+  require_in_derivative: true
+  require_localised: true
+  # Electrodes whose MNI coordinates fall outside the brain.
+  exclude_names:
+    sub-05: [GB41]
+    sub-07: [SF1]
+    sub-08: [DAMT4]
+    sub-09: [P1]
+  # Kept; the distance to the nearest Destrieux parcel is carried as a covariate.
+  max_parcel_distance_mm: null
+  roi_map:
+    EAC: [G_temp_sup-G_T_transv, G_temp_sup-Plan_polar, G_temp_sup-Plan_tempo]
+    STG: [G_temp_sup-Lateral, S_temporal_sup]
+    MTG: [G_temporal_middle, S_temporal_inf]
+    IFG: [G_front_inf-Opercular, G_front_inf-Triangul, G_front_inf-Orbital, S_front_inf]
+    PRC: [G_precentral, S_precentral-inf-part, S_precentral-sup-part, S_central]
+    MFG: [G_front_middle, S_front_middle]
+    TMP: [Pole_temporal]
+  language_rois: [IFG, STG, MTG, TMP]
+  control_rois:  [EAC, PRC, MFG]
+
+# -----------------------------------------------------------------------------
+# Neural signal
+# -----------------------------------------------------------------------------
+neural:
+  source: highgamma_derivative        # derivatives/ecogprep/*_desc-highgamma_ieeg.fif
+  band_hz: [70, 200]                  # applied by the dataset's preprocessing
+  sfreq_hz: 512
+  # sub-01 is stored in microvolts, every other participant in volts.
+  unit_fix:
+    sub-01: 1.0e-6
+  window_ms: 200                      # boxcar averaged per lag
+  transform: log                      # window average -> log -> z-score within fold
+  standardise: per_channel_within_fold
+  # Artifact masks and within-block drift removal (preprocessing/artifact_cleaning.py).
+  clean:
+    mask: true
+    detrend: true
+    procedure: word_lag_exact_grid   # a label; enters the cache key
+
+lags:
+  tmin_s: -2.0
+  tmax_s: 2.0
+  step_ms: 25                         # -> 161 lags
+  ablation_step_ms: 50
+  ablation_window_ms: 50
+
+# -----------------------------------------------------------------------------
+# Language model and sparse autoencoder dictionaries
+# -----------------------------------------------------------------------------
+llm:
+  model_id: google/gemma-2-2b
+  n_layers: 26
+  layer: 12                           # output of model.model.layers[12]
+  context_tokens: 1024                # the dictionaries' training sequence length
+  stride_tokens: 512
+  dtype: float32
+  prepend_bos: true                   # BOS activations are never retained
+  word_pooling:
+    residual: mean                    # over sub-word tokens
+    sae: max                          # a feature is active on a word if it fires on any token
+    surprisal: sum                    # -log2 P(word | context) = sum of token surprisals
+
+sae:
+  repo: google/gemma-scope-2b-pt-res
+  primary: {layer: 12, width: "16k", l0: 82}
+  sensitivity:
+    - {layer: 12, width: "16k", l0: 22}
+    - {layer: 12, width: "16k", l0: 176}
+    - {layer: 12, width: "65k", l0: 72}
+    - {layer: 12, width: "32k", l0: 76}
+  layer_sweep: [6, 12, 18]
+  # A feature enters the design only if it is active on at least this many of the
+  # 5,130 analysed words.
+  min_active_words: 25
+
+# -----------------------------------------------------------------------------
+# Feature bands of the banded-ridge model
+# -----------------------------------------------------------------------------
+bands:
+  sae:        {source: gemmascope, standardise: within_fold}
+  surprisal:  {source: gemma_surprisal_bits, n_features: 1, standardise: within_fold}
+  # Finite-impulse-response form: the mel spectrogram at a fixed grid of delays,
+  # identical at every lag.
+  acoustic:
+    source: mel_spectrogram
+    spectrogram_hz: 100          # frame k is time k/100 s
+    window_ms: 200               # averaging window per delay tap
+    delays_s: [-2.0, -1.75, -1.5, -1.25, -1.0, -0.75, -0.5, -0.25, 0.0,
+               0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0]
+    n_mel_bins: 80               # -> 17 x 80 = 1360 features
+    standardise: within_fold
+  lexical:    {source: [zipf_frequency, n_characters, word_duration_s],
+               standardise: within_fold}
+
+comparison_models:
+  dense_pca:      {source: gemma_resid_layer12, n_components: 300}
+  acoustic_only:  {bands: [acoustic]}
+  lexical_only:   {bands: [lexical]}
+  surprisal_only: {bands: [surprisal]}
+  phonetic_only:  {source: dataset_phonetic}
+  gpt2xl_dense:   {source: dataset_gpt2xl_layer24, n_components: 300}
+
+# -----------------------------------------------------------------------------
+# Cross-validation: chronological blocks with an embargo
+# -----------------------------------------------------------------------------
+cv:
+  scheme: contiguous_blocks
+  order_by: word_onset_time           # not row index: the transcript is not in time order
+  n_outer_folds: 10                   # about 3 min of narrative per block
+  n_inner_folds: 3                    # hyperparameter search inside the training set
+  embargo_s: 10.0                     # training words within 10 s of a test block are dropped
+  shuffle: false
+
+# -----------------------------------------------------------------------------
+# Estimator
+# -----------------------------------------------------------------------------
+model:
+  estimator: himalaya.MultipleKernelRidgeCV
+  kernels: precomputed
+  solver: random_search
+  n_iter: 20                          # kernel-weight samples
+  alphas_log10: [-3, 8, 12]           # logspace(-3, 8, 12)
+  n_targets_batch: 1000
+  n_alphas_batch: 5
+  n_targets_batch_refit: 200
+  backend: torch_cuda
+  score: correlation                  # plus R2, both on pooled held-out predictions
+
+# -----------------------------------------------------------------------------
+# Concentration of neural variance on few features (H2)
+# -----------------------------------------------------------------------------
+monosemanticity:
+  metric: semantic_concentration_index    # R2(top-k features) / R2(all features)
+  top_k: [5, 10, 20]
+  select_top_k_on: train_folds_only
+  controls:
+    random_dictionary: true           # random encoder, thresholds retuned per feature
+    column_shuffled: true             # word order permuted within each feature column
+    dense_pca_matched: true
+
+# -----------------------------------------------------------------------------
+# Null models and statistics
+# -----------------------------------------------------------------------------
+nulls:
+  phase_randomised_neural:
+    n_permutations: 200
+    # Randomisation on log(envelope), exponentiated back, so the surrogate stays positive
+    # and passes through the same target code as the data.
+    method: fourier_phase_scramble_log_domain
+    # Band weights and ridge penalties are searched afresh on every surrogate.
+    refit_hyperparameters: true
+    # Band kernels depend only on X and the fold indices, so they are computed once.
+    cache_kernels: true
+    bands: [sae, surprisal]
+  block_circular_shift:
+    n_permutations: 200
+    min_shift_s: 60.0
+    # Words are rolled in chronological rank, which is a bijection.
+
+stats:
+  cluster_test:
+    over: lags                        # within electrode
+    threshold: tfce                   # threshold-free cluster enhancement
+    tail: 1
+  # Max-statistic permutation test: each surrogate contributes one maximum TFCE value
+  # over all electrodes and lags.
+  primary_inference: max_statistic_fwer
+  # Per-electrode BH-FDR, with a generalised-Pareto fit to the null's upper tail beyond the
+  # permutation floor.
+  secondary_inference: fdr_bh_with_gpd_tail
+  gpd:
+    n_exceedances: 50
+    min_exceedances: 20
+    goodness_of_fit_alpha: 0.05
+  electrode_correction: fdr_bh
+  alpha: 0.05
+  group_model: statsmodels.MixedLM    # ~ roi + (1 | subject)
+  effect_size: [pearson_r, delta_r2, cohens_d]
+  bootstrap:
+    n_resamples: 10000
+    unit: subject                     # bootstrap clustered by participant
+    ci: 0.95
+
+# -----------------------------------------------------------------------------
+# Runtime: how the work is executed, not what is computed (not part of the cache key)
+# -----------------------------------------------------------------------------
+runtime:
+  n_jobs_subset_ridge: 12

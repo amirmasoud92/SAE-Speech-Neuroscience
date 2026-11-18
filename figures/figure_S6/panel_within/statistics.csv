@@ -1,0 +1,2 @@
+estimate,ci95_lo,ci95_hi,p_two_sided,n_electrodes,n_participants,n_types,n_tokens,contrast
+0.0030124398907466,-0.0021122760987326,0.0081641081618921,0.371,135.0,8.0,234.0,3711.0,sparse - GPT-2 XL

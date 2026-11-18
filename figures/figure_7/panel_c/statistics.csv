@@ -1,0 +1,2 @@
+n_subjects,n_pairs,n_types,n_tokens,min_occ,between_isc,within_isc,between_p,within_p,between_p_circ,within_p_circ,circ_null_w_lo,circ_null_w_hi,perm_null_w_lo,perm_null_w_hi,n_perm,min_shift_frac,detrend_harmonics
+8,28,234,3711,4,0.1017125444018153,0.0595602421548352,0.0009990009990009,0.0009990009990009,0.0009990009990009,0.0009990009990009,-0.0098840445435164,0.0102899034010581,-0.0066148138316203,0.0063753802738533,1000,0.1,0

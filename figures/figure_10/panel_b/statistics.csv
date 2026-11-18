@@ -1,0 +1,3 @@
+scope,tau,k,n_admissible,n_contacts,n_subjects_conf,n_untied,n_real_higher,p_sign_one_sided,p_wilcoxon_one_sided,n_electrodes_conf,pct_real,pct_random,pct_shuffled,diff,diff_ci_lo,diff_ci_hi,real_leads_all_tau
+IFG,0.5,20,59,144,7,5,5,0.03125,0.03125,59,42.3728813559322,18.64406779661017,0.0,0.2372881355932203,0.086021505376344,0.5121951219512195,True
+language,0.5,20,223,394,9,9,9,0.001953125,0.001953125,223,64.12556053811659,30.94170403587444,0.0,0.3318385650224215,0.2198225507573316,0.4519774011299435,True

@@ -1,0 +1,3 @@
+comparison,cliffs_delta,p_one_sided
+"trained-model autoencoder vs random-model autoencoder, 100 M",0.652,2.187930538346793e-43
+"trained-model autoencoder vs its initialisation, 100 M",0.48406779661016947,8.357405160657652e-25

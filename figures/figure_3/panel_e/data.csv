@@ -1,0 +1,13 @@
+word_index,use,activation,context_list_order,context_before,word,context_after
+1261,discourse negation,0.0,,animal it has,no,human author
+2625,discourse negation,19.987064361572266,,the Yeah well,no,Yeah It's
+2663,discourse negation,32.171836853027344,1,about it Uh,no,I read
+4115,discourse negation,25.009532928466797,2,wait a minute,No,Do they
+4121,discourse negation,23.23860740661621,3,have a point,No,I've had
+4232,inside there's no X,0.0,5,to me There's,no,way that
+4404,inside there's no X,0.0,6,your injury There's,no,there's no
+4406,inside there's no X,3.291445732116699,4,There's no there's,no,way to
+4420,inside there's no X,0.0,,would give There's,no,losses to
+4425,inside there's no X,0.0,,to reputation There's,no,even uh
+4430,inside there's no X,0.0,,uh even there's,no,even allegation
+4476,inside there's no X,0.0,,the injury There's,no,case that

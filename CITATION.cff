@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite this repository."
+type: software
+title: "SAE-Speech-Neuroscience"
+authors:
+  - family-names: Ahmadi
+    given-names: Amirmasoud
+    email: Amirmasoud.Ahmadi@bi.mpg.de
+    affiliation: Max Planck Institute for Biological Intelligence, Seewiesen, Germany
+repository-code: "https://github.com/amirmasoud92/SAE-Speech-Neuroscience"
+references:
+  - type: article
+    title: "Sparse language-model features trade context for word identity in human cortical responses to speech"
+    authors:
+      - family-names: Ahmadi
+        given-names: Amirmasoud
+      - family-names: Ghorbani Lohesara
+        given-names: Fatemeh

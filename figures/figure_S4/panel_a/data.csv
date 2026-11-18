@@ -1,0 +1,13 @@
+score,property,raw_rho,raw_p
+neural importance,is_function,-0.1809758270631983,0.0016465200044255
+neural importance,concreteness,0.1574617942560489,0.0067295659986481
+neural importance,zipf,-0.2194574492258303,0.0001270726063856
+neural importance,n_char,0.0940593890341221,0.1039577769176821
+causal necessity (delta log-prob),is_function,0.1809308444288159,0.0016510059452559
+causal necessity (delta log-prob),concreteness,-0.1318893975613593,0.0234781567144906
+causal necessity (delta log-prob),zipf,0.2408372542124474,2.4841771781872512e-05
+causal necessity (delta log-prob),n_char,-0.1831052228963992,0.0014465048259683
+causal necessity (KL),is_function,0.2551586490627234,7.629536066534334e-06
+causal necessity (KL),concreteness,-0.2096989816476854,0.0002869405710468
+causal necessity (KL),zipf,0.3035995419947034,8.15456971281736e-08
+causal necessity (KL),n_char,-0.2517038949619856,1.0209523255292815e-05

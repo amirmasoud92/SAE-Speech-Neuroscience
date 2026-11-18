@@ -1,0 +1,2 @@
+n_subjects,margin_delta,gemma_mean_r,gpt2xl_mean_r,observed_diff,ci95_lo,ci95_hi,ci90_lo,ci90_hi,p_nonsuperiority,p_lower,tost_p,nonsuperiority_established,equivalence_established,n_electrodes
+8.0,0.0155337643904021,0.1418210123169005,0.1262872479264984,-0.0145844903656137,-0.0196294255649985,-0.0080526042131723,-0.0191881310389025,-0.0098791412567383,0.0,0.4137,0.4137,True,False,135.0

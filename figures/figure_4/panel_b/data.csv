@@ -1,0 +1,5 @@
+arm,source_arm,mean_r
+classical,classical-85,0.0646590715620284
+GPT-2 XL,GPT-2 XL PCA-300,0.1262872479264984
+sparse,SAE PCA-300 exact,0.1295886272673467
+Gemma dense,Gemma resid PCA-300,0.1418210123169005
