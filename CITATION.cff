@@ -8,6 +8,7 @@ authors:
     email: Amirmasoud.Ahmadi@bi.mpg.de
     affiliation: Max Planck Institute for Biological Intelligence, Seewiesen, Germany
 repository-code: "https://github.com/amirmasoud92/SAE-Speech-Neuroscience"
+license: MIT
 references:
   - type: article
     title: "Sparse language-model features trade context for word identity in human cortical responses to speech"

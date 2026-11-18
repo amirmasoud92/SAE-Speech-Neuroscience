@@ -76,5 +76,5 @@ Amirmasoud.Ahmadi@bi.mpg.de
 
 ## License
 
-No license has been specified yet; until one is added, no permission to reuse or redistribute the
-code is granted.
+The code is released under the [MIT License](LICENSE). The datasets, models and dictionaries it
+uses are distributed by their providers under their own terms.
